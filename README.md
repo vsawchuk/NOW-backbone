@@ -5,218 +5,66 @@ With this exercise, we are going to make a relatively simple backbone applicatio
 
 Let's jump in!
 
+### Setup
 
-### Create the files
-In terminal,
-```Bash
-mkdir now-thats-what-i-call-backbone
-cd now-thats-what-i-call-backbone
-touch index.html
-touch app.js
-```
+We have already set up the Webpack template for you to get started. It comes pre-loaded with all of beautiful libraries that will help us make a great application: Backbone, jQuery and Underscore. It also has a starter `app.js` file as well as `models` and `collections` folders.
 
-### Link Dependancies
-A benefit of working with Backbone is it's flexibility. It allows us to continue working with familiar libraries, like jQuery and underscore! In order to use them, we need to link them in our HTML.
+Since we are set up with Webpack, you'll want to run `npm install` once to set this project up. To start your development server, you'll want to run `npm start`.
 
-Create your HTML shell. Then, using a CDN, link to jQuery, underscore and backbone at the bottom (right below the ``<body>`` tag).
-After all our libraries have been linked, link to your js file, ``app.js``.
-
-```html
-<!--STEP ONE: setup HTML shell  -->
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>NOW That's What I Call Backbone</title>
-  </head>
-  <body>
-  </body>
-
-  <!-- STEP TWO: link all dependances (underscore.js, jQuery.js and Backbone.js) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore.js" type="text/javascript"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js" type="text/javascript"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.3.3/backbone.js" type="text/javascript"></script>
-
-  <!-- STEP THREE: create app.js file and link it -->
-  <script src="app.js" type="text/javascript"></script>
-</html>
-```
-
+Take a moment to examine the folder structure before moving on.
 
 ### Initial Data
-Our mix cd will be based on the following array of objects with song data.
-
-Copy this code to the top of your ``app.js`` file:
+Our mix CD will be based on a hard-coded array of objects with song data. We've gotten you started here with the structure of one song, so go ahead and copy this code to your `app.js` file, above the `$(document).ready()`:
 ```JavaScript
 var songData = [
     {
         "title": "Drop It Like It's Hot",
         "year": 2004,
         "artist": "Snoop Dog"
-    },
-    {
-        "title": "Pieces of Me",
-        "year": 2004,
-        "artist": "Ashlee Simpson"
-    },
-    {
-        "title": "Vertigo",
-        "year": 2004,
-        "artist": "U2"
-    },
-    {
-        "title": "When the Sun Goes Down",
-        "year": 2004,
-        "artist": "Kenny Chesney"
-    },
-    {
-        "title": "1, 2 Step",
-        "year": 2004,
-        "artist": "Ciara"
-    },
-    {
-        "title": "Talk About Our Love",
-        "year": 2004,
-        "artist": "Brandy"
-    },
-    {
-        "title": "It's My Life",
-        "year": 2004,
-        "artist": "No Doubt"
-    },
-    {
-        "title": "Toxic",
-        "year": 2004,
-        "artist": "Britney Spears"
-    },
-    {
-        "title": "Are You Going to Be My Girl",
-        "year": 2004,
-        "artist": "Jet"
-    },
-    {
-        "title": "Redneck Woman",
-        "year": 2004,
-        "artist": "Gretchen Wilson"
-    },
-    {
-        "title": "Lean Back",
-        "year": 2004,
-        "artist": "Terror Squad"
     }
   ];
 ```
 
+Then **add a few more songs** to your collection that you like!
+
 
 ### Models
-Lets start with something we're familiar with, models!
+Next up, we'll want to create a Model to store our song's information.
 
-Creating a model is as simple as setting a capitalized variable to: ``Backbone.Model.extend({ });``.
+#### Model File
+1. You will create a new model file in the `src/app/models` folder
+2. Write the code that you need to create an empty model called `Song` in this new file
 
-In the code below we create a new model for song, then create a song by passing an object with all the properties.
+#### Use the Model
+Make some updates to the `app.js` file.
 
-By having this
-```javascript
+1. Add the code to load the new Model
+2. Create an instance of your model object
+3. Log some information about the model instance to ensure it was created successfully
 
-var Song = Backbone.Model.extend({ });
+#### View the Model Data
 
-var song1 = new Song({
-  title: "Drop It Like It's Hot",
-  year: 2004,
-  artist: "Snoop Dog"
-});
-
-console.log(song1.get("title") +  " is by: " + song1.get("artist"));
-
-```
-
+1. There is an Underscore template stub already created for you in the `dist/index.html` file. Update this template to display some of the song fields that you want to see displayed.
+2. Compile the template in `app.js` in the appropriate section of code
+3. Invoke the compiled template to generate the HTML for the model instance created above
+4. Add the song's HTML to the DOM (check out `index.html` to see where you'd like to add it)
 
 ### Collections
+Next, we'll create a collection.
+
+#### Collection File
+
+1. Create a new collection file in the `src/app/collections` folder
+2. Add the code to load in the `Song` model
+3. Write the code that you need to create a collection called `SongList` which will contain `Song` model objects
 
 
-```javascript
-// Fly new mix CD of songs for the summer
-var MixCd = Backbone.Collection.extend({
-  model: Song
-});
+#### Use the Collection
+Make some updates to the `app.js` file.
 
-// Lets make a collection (from our song data)
-var summer04 = new MixCd(songData);
+1. Add the code to load the new collection
+2. Instantiate the collection using the `songData` array you created earlier
+3. Add the model instance that you created in the previous step to the collection using the collection's `add` method
 
-summer04.each(function(song) {
-  console.log(song.get("title"));
-});
-```
-
-
-
-
-
-### Song View
-
-```javascript
-var SongView = Backbone.View.extend({
-  initialize: function(params) {
-    this.template = params.template;
-  },
-  render: function() {
-    // console.log(this.model.attributes.artist);
-    var compiledTemplate = this.template(this.model.toJSON());
-    // console.log(compiledTemplate);
-    this.$el.html(compiledTemplate);
-    return this;
-  },
-  events: {
-    'click h3': "seeAlert"
-  },
-  seeAlert: function(e) {
-    this.$el.append(this.model.attributes.artist);
-  }
-});
-```
-
-
-
-
-### Collection View
-
-```javascript
-// COLLECTION
-var MixCdView = Backbone.View.extend({
-  initialize: function(params) {
-    this.template = params.template;
-  },
-  render: function() {
-    var that = this;
-    this.model.each(function(song) {
-      var songView = new SongView({
-        model: song,
-        template: that.template,
-        tagName: 'li'
-      });
-      that.$('.song-list').append(songView.render().$el);
-    });
-    return this;
-  }
-});
-
-```
-
-
-
-
-### HOT DOM!
-
-```javascript
-$(document).ready(function() {
-  mixCd = new MixCd(songData);
-
-  var mixCdView = new MixCdView({
-    model: mixCd,
-    template: _.template($('#song-template').html()),
-    el: 'main'
-  });
-
-  mixCdView.render();
-});
-```
+#### View the Collection Data
+1. Using the Underscore tempate you created in the model section to render the data for each Song within the collection
