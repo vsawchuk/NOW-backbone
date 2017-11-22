@@ -1,91 +1,222 @@
-# Ada's Backbone scaffold
-This repository holds a couple of versions of Ada's scaffold for Backbone projects.
+# NOW That's What I Call Backbone
+We have come a long way from our mixtape days. You're a little older, wiser and now know some new, slick technologies.
 
-## Quick Start
-### Development
-In order to get started developing a Backbone application with this scaffold, run the following commands in the directory where the scaffold project files are located:
+With this exercise, we are going to make a relatively simple backbone application (from scratch!) that will display the track list of a mix cd. To make it even more slick, when we click on a song title, the artists name will appear below the title. WILD!
 
-```bash
-npm install
+Let's jump in!
+
+
+### Create the files
+In terminal,
+```Bash
+mkdir now-thats-what-i-call-backbone
+cd now-thats-what-i-call-backbone
+touch index.html
+touch app.js
 ```
-This command tells npm to install every dependency listed in the `package.json` file (more details below [in the FAQ](#scaffold-files-and-folders)). This is very similar to the `bundle install` command.
 
-```bash
-npm start
+### Link Dependancies
+A benefit of working with Backbone is it's flexibility. It allows us to continue working with familiar libraries, like jQuery and underscore! In order to use them, we need to link them in our HTML.
+
+Create your HTML shell. Then, using a CDN, link to jQuery, underscore and backbone at the bottom (right below the ``<body>`` tag).
+After all our libraries have been linked, link to your js file, ``app.js``.
+
+```html
+<!--STEP ONE: setup HTML shell  -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>NOW That's What I Call Backbone</title>
+  </head>
+  <body>
+  </body>
+
+  <!-- STEP TWO: link all dependances (underscore.js, jQuery.js and Backbone.js) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore.js" type="text/javascript"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js" type="text/javascript"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.3.3/backbone.js" type="text/javascript"></script>
+
+  <!-- STEP THREE: create app.js file and link it -->
+  <script src="app.js" type="text/javascript"></script>
+</html>
 ```
-This command tells npm to run the `start` script that is configured in `package.json`. The scaffold's `package.json` configures the `start` script to run a local development webserver that uses webpack ([see below](#major-components)).
 
-The result is very similar to running `rails server` in your Rails projects. However, one major difference is the output that you see in your terminal:
 
-![Animation showing webpack launch](http://g.recordit.co/99luXnTbP8.gif)
+### Initial Data
+Our mix cd will be based on the following array of objects with song data.
 
-The terminal will output any errors webpack detects as it bundles the code files together.  So you can check here for build-time error messages.
+Copy this code to the top of your ``app.js`` file:
+```JavaScript
+var songData = [
+    {
+        "title": "Drop It Like It's Hot",
+        "year": 2004,
+        "artist": "Snoop Dog"
+    },
+    {
+        "title": "Pieces of Me",
+        "year": 2004,
+        "artist": "Ashlee Simpson"
+    },
+    {
+        "title": "Vertigo",
+        "year": 2004,
+        "artist": "U2"
+    },
+    {
+        "title": "When the Sun Goes Down",
+        "year": 2004,
+        "artist": "Kenny Chesney"
+    },
+    {
+        "title": "1, 2 Step",
+        "year": 2004,
+        "artist": "Ciara"
+    },
+    {
+        "title": "Talk About Our Love",
+        "year": 2004,
+        "artist": "Brandy"
+    },
+    {
+        "title": "It's My Life",
+        "year": 2004,
+        "artist": "No Doubt"
+    },
+    {
+        "title": "Toxic",
+        "year": 2004,
+        "artist": "Britney Spears"
+    },
+    {
+        "title": "Are You Going to Be My Girl",
+        "year": 2004,
+        "artist": "Jet"
+    },
+    {
+        "title": "Redneck Woman",
+        "year": 2004,
+        "artist": "Gretchen Wilson"
+    },
+    {
+        "title": "Lean Back",
+        "year": 2004,
+        "artist": "Terror Squad"
+    }
+  ];
+```
 
-## FAQ
-### What is the Backbone scaffold?
-This scaffold provides a lean starting point for building front-end applications with the Backbone JavaScript library. Because Backbone is a library and not a full framework, it does not provide many of the useful tools for quickly starting development that frameworks such as Rails do provide. The choices about how to structure a project and fit various pieces together are all left to the developers, giving maximum flexibility to create a design that suits their needs.
 
-For the purposes of introducing the Backbone library, and larger front-end web application development in general, Ada has decided to provide a "scaffold" which will get students up and running with Backbone much more quickly and provide a more consistent experience for both live coding examples and projects throughout the Backbone curriculum.
+### Models
+Lets start with something we're familiar with, models!
 
-### Is this The Right Way to use Backbone?
-Nope! One of the results that comes from Backbone being a library rather than a framework is that there is no one "right way" to use Backbone. In contrast to Rails, as developers we say that Backbone is "unopinionated" -- it gives users of the library a few critical pieces and then steps away to let us make our own choices about how to use them.
+Creating a model is as simple as setting a capitalized variable to: ``Backbone.Model.extend({ });``.
 
-Outside of Ada it's very likely that Backbone is being used in different ways than we use it here, possibly in significantly different ways. This comes down primarily to the different needs and circumstances of those other projects as compared to ours (such as not being primarily for instruction). It also comes down to the different developers involved in the project and their opinions and history with Backbone.
+In the code below we create a new model for song, then create a song by passing an object with all the properties.
 
-Above all, remember that another project using Backbone in a different manner is not incorrect to do so. The best way to deal with encountering such a project would be to have empathy for its creators and to seek understanding of the reasons for the design decisions they made.
+By having this
+```javascript
 
-### What is in the scaffold?
-This scaffold consists primarily of "infrastructure" code that defines a particular development and testing workflow using modern JavaScript practices. For earlier projects we provide a scaffold that includes empty class definitions for each class to be used in the project in order to minimize decision paralysis about project structure when Backbone is still very new.
+var Song = Backbone.Model.extend({ });
 
-The scaffold consists of a number of components that fit together in order to make developing with Backbone a faster, more directed experience. In this section we will briefly explain all of the files included in the scaffold (the version in the `scaffold/application` branch).
+var song1 = new Song({
+  title: "Drop It Like It's Hot",
+  year: 2004,
+  artist: "Snoop Dog"
+});
 
-**NOTE**: Understanding all of these files is not necessary for using the scaffold! Ada is providing this information because we know that many of our students will be curious about everything contained in the scaffold. Our focus is on getting students to understand and be familiar with Backbone itself, if this information is getting in the way of that goal please ignore it!
+console.log(song1.get("title") +  " is by: " + song1.get("artist"));
 
-#### Major Components
+```
 
-* [npm](https://www.npmjs.com/) - Package Manager
 
-  npm is the equivalent, for Node.js, of Ruby's RubyGems and Bundler projects. Its job is to provide access to a registry of existing open-source software (known as packages) and allow a project to specify which packages it depends upon.
+### Collections
 
-  npm can be used on the commandline to perform various tasks, including installing all dependencies, adding new dependencies, and running pre-defined script commands (ala Rake). See the Quick Start section for details on the most relevant commands to use.
-* [Babel](https://babeljs.io/) - JavaScript compiler
 
-  Babel's job is to take JavaScript code written in a [newer version of JavaScript](http://babeljs.io/docs/learn-es2015/) (known as ES6 or ES2015) and convert it to equivalent code in an older version of JavaScript (generally ES5) which has more universal support in web browsers.
+```javascript
+// Fly new mix CD of songs for the summer
+var MixCd = Backbone.Collection.extend({
+  model: Song
+});
 
-  webpack is a tool for taking multiple JavaScript modules (which we will be creating using the ES6 syntax) and putting them together coherently into a single JavaScript file, because web browsers don't really understand the concept of JavaScript modules (yet).
-* [Jasmine](https://jasmine.github.io/) - Testing framework
+// Lets make a collection (from our song data)
+var summer04 = new MixCd(songData);
 
-  Jasmine is a testing framework that uses spec-style tests, with a strong influence from RSpec. When we get to the point of including tests for our Backbone projects, this is what we'll use. More guidance on how to write and run tests with Jasmine will be included in the curriculum when we introduce testing.
-* [jQuery](https://jquery.com/) - DOM manipulation & AJAX library
+summer04.each(function(song) {
+  console.log(song.get("title"));
+});
+```
 
-  This is the same jQuery that Ada's curriculum has been using up until now. Backbone builds ontop of it rather than re-inventing it.
-* [Underscore](http://underscorejs.org/) - Utility library
 
-  Underscore is the kind of library that is almost unique to JavaScript. This is because it provides a wide variety of helpful functions that, in every other modern language, would be built-in. It was written by the creator of Backbone and is used heavily within the implementation of Backbone.
 
-  For the Ada curriculum it will mostly be used for the `template()` function in our views (more details on this will be provided when we introduce Backbone views).
-* [Backbone](http://backbonejs.org/) - MVC Library
 
-  Backbone is the core library that we will be using when creating the projects in this section of the JavaScript curriculum. It allows for something akin to the MVC pattern from Rails by providing the pieces necessary to create such a design.
 
-#### Scaffold Files And Folders
-| Path/File | Purpose |
-|:----------|:--------|
-| `.babelrc` | This file configures the Babel compiler according to our needs. We use it to tell Babel to compile our code as though it were ES2015, and to look in the `src/` and `spec/` directories for module files when using `import`. |
-| `.eslintrc` | This file configures the ESLint linter. A linter is a program that analyzes code and tells the programmer when their source code does not match particular style guidelines (such as improper indentation or missing semicolons). Our ESLinter will is set to keep us to the AirBNB style guide with a few modifications.
-| `dist/` | This folder will hold our HTML file and bundled content. |
-| `dist/index.html` | This is the actual HTML code for our Backbone project. It should only contain the "static" page elements (those that will not be duplicated, and will not be added/removed from the page), plus any Underscore templates that our views will use to render the "dynamic" page elements. It also includes a `<script>` tag to include the JavaScript file that webpack creates for us. |
-| `node_modules/` | This folder holds all of the npm packages that have been downloaded with `npm install`. Generally the contents of this directory are not important to our curriculum. It should always be added to the `.gitignore` file. |
-| `package.json` | This JSON file holds the project metadata for npm. It's like a very extended `Gemfile`, but it includes fields for specifying the project name, home page, copyright license and more. Those fields are included because this file will be used if we decide to make our project available as a package in the npm package registry. <br><br>The portions of this file that we will be most concerned with are the `dependencies`, `devDependencies`, and `scripts` sections. These specify what packages will be installed when `npm install` is run, and what commands will be run by the `npm start` and `npm test` commands. |
-| `spec/` | This folder will hold all of the Jasmine test files that we will write (if tests are a requirement for the project). |
-| `spec/support/jasmine.json` | This file configures Jasmine, akin to the `test/test_helper.rb` file in our Rails projects. |
-| `src/` | This is where all of the project source code lives. |
-| `src/app.js` | This is the "main entry point" for the project's javascript code. When webpack bundles all of our code up into a single JavaScript file, this is the code that runs when that file is included in an HTML file via `<script>` tags. |
-| `webpack.config.js` | This JavaScript file configures webpack. There's a lot going on in here, feel free to ask Charles or Chris for explanation of any details. |
+### Song View
 
-## Versions
-| Branch name | Purpose |
-|:------------|:--------|
-| [`scaffold/bare`](https://github.com/AdaGold/backbone-baseline/tree/scaffold/bare) | Empty scaffold, with general project structure but no code. |
-| [`scaffold/application`](https://github.com/AdaGold/backbone-baseline/tree/scaffold/application) | Empty application scaffold. This builds on the bare scaffold by adding an `Application` model class and an `ApplicationView` view class. |
-| [`scaffold/rolodex`](https://github.com/AdaGold/backbone-baseline/tree/scaffold/rolodex) | Project scaffold for the Rolodex project. This builds on the Application scaffold by adding classes and static content (HTML and CSS) specific to the Rolodex project. |
+```javascript
+var SongView = Backbone.View.extend({
+  initialize: function(params) {
+    this.template = params.template;
+  },
+  render: function() {
+    // console.log(this.model.attributes.artist);
+    var compiledTemplate = this.template(this.model.toJSON());
+    // console.log(compiledTemplate);
+    this.$el.html(compiledTemplate);
+    return this;
+  },
+  events: {
+    'click h3': "seeAlert"
+  },
+  seeAlert: function(e) {
+    this.$el.append(this.model.attributes.artist);
+  }
+});
+```
+
+
+
+
+### Collection View
+
+```javascript
+// COLLECTION
+var MixCdView = Backbone.View.extend({
+  initialize: function(params) {
+    this.template = params.template;
+  },
+  render: function() {
+    var that = this;
+    this.model.each(function(song) {
+      var songView = new SongView({
+        model: song,
+        template: that.template,
+        tagName: 'li'
+      });
+      that.$('.song-list').append(songView.render().$el);
+    });
+    return this;
+  }
+});
+
+```
+
+
+
+
+### HOT DOM!
+
+```javascript
+$(document).ready(function() {
+  mixCd = new MixCd(songData);
+
+  var mixCdView = new MixCdView({
+    model: mixCd,
+    template: _.template($('#song-template').html()),
+    el: 'main'
+  });
+
+  mixCdView.render();
+});
+```
