@@ -16,11 +16,11 @@ Take a moment to examine the folder structure before moving on.
 ### Initial Data
 Our mix CD will be based on a hard-coded array of objects with song data. We've gotten you started here with the structure of one song, so go ahead and copy this code to your `app.js` file, above the `$(document).ready()`:
 ```JavaScript
-var songData = [
+const songData = [
     {
-        "title": "Drop It Like It's Hot",
-        "year": 2004,
-        "artist": "Snoop Dog"
+        title: "Drop It Like It's Hot",
+        year: 2004,
+        artist: "Snoop Dog"
     }
   ];
 ```
